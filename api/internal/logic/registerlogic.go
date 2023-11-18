@@ -28,12 +28,6 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 	}
 }
 
-//type M struct {
-//	Id      int32  `gorm:"column:id" json:"id"`
-//	Name    string `gorm:"column:name" json:"name"`
-//	Version int32  `gorm:"column:version" json:"version"`
-//}
-
 func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err error) {
 	db, err := DB.Init()
 	//data := new(m)
@@ -42,12 +36,9 @@ func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err er
 		return
 	}
 	m := &model.User{
-		Name: sql.NullString{String: req.Name, Valid: true},
-		Password: sql.NullInt64{
-			Int64: int64(req.Password),
-			Valid: true,
-		},
-		Version: sql.NullInt64{Int64: 0, Valid: true},
+		Name:     sql.NullString{String: req.Name, Valid: true},
+		Password: sql.NullInt64{Int64: int64(req.Password), Valid: true},
+		Version:  sql.NullInt64{Int64: 0, Valid: true},
 	}
 	defer func() {
 		sqlDB, err := db.DB()
@@ -61,7 +52,6 @@ func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err er
 		errors.New("插入失败")
 	}
 	token := &utils.JWTClaims{
-		UserID:   int(m.Id),
 		Username: m.Name.String,
 		Version:  int(m.Version.Int64),
 	}
@@ -69,12 +59,7 @@ func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err er
 	if err != nil {
 		errors.New("生成错误")
 	}
-
+	//先拿长token试一下
 	fmt.Println(res)
-	data, err := utils.ParseLongToken(res)
-	if err != nil {
-		errors.New("生成错误")
-	}
-	fmt.Println(data.Version)
 	return
 }

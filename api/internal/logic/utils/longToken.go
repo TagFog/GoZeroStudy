@@ -7,7 +7,6 @@ import (
 
 type JWTClaims struct {
 	jwt.StandardClaims
-	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
 	Version  int    `json:"version"`
 }
