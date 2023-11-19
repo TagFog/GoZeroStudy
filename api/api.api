@@ -19,14 +19,14 @@ type token {
 	Version int32  `json:"version"`
 }
 type update {
-	Name     string `json:"name"` //需要更新的名字
+	Id       int    `json:"id"`       //唯一id
+	Name     string `json:"name"`     //需要更新的名字
 	Password int32  `json:"password"` //需要更新的密码
-	Atoken   string `json:"atoken"` //解析version的token
+	Atoken   string `json:"atoken"`   //解析version的token
 }
 type state {
 	Onestring string `json:"onestring"` //返回的状态
 }
-//TODO login 验证 更新后是否能登录
 service TokenTest {
 	// 定义没有请求体和响应体的接口，如 ping
 	@handler register

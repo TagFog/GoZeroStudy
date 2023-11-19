@@ -13,11 +13,12 @@ type Token struct {
 }
 
 type Update struct {
-	Name     string `json:"name"`
-	Password int32  `json:"password"`
-	Atoken   string `json:"atoken"`
+	Id       int    `json:"id"`       //唯一id
+	Name     string `json:"name"`     //需要更新的名字
+	Password int32  `json:"password"` //需要更新的密码
+	Atoken   string `json:"atoken"`   //解析version的token
 }
 
 type State struct {
-	Onestring string `json:"onestring"`
+	Onestring string `json:"onestring"` //返回的状态
 }

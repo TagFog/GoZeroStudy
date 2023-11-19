@@ -9,8 +9,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -30,7 +28,6 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err error) {
 	db, err := DB.Init()
-	//data := new(m)
 	if err != nil {
 		errors.New("连接数据库失败")
 		return
@@ -51,15 +48,23 @@ func (l *RegisterLogic) Register(req *types.Register) (resp *types.Token, err er
 	if err != nil {
 		errors.New("插入失败")
 	}
+	//这里要加一个唯一id
 	token := &utils.JWTClaims{
+		Id:       int(m.Id),
 		Username: m.Name.String,
 		Version:  int(m.Version.Int64),
 	}
-	res, err := utils.GenLongToken(token)
+	shortToken, err := utils.GenShortToken(token)
 	if err != nil {
 		errors.New("生成错误")
 	}
-	//先拿长token试一下
-	fmt.Println(res)
-	return
+	logx.Info(shortToken)
+	//生成长token
+	longToken, err := utils.GenLongToken(token)
+	if err != nil {
+		errors.New("生成错误")
+	}
+	logx.Info(longToken)
+
+	return &types.Token{Atoken: shortToken, Rtoken: longToken}, nil
 }
